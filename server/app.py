@@ -28,6 +28,16 @@ def get_earthquake_by_id(id):
     else:
         return make_response({"message": f"Earthquake {id} not found."}, 404)
 
+@app.route('/earthquakes/magnitude/<float:magnitude>')
+def earthquakes_by_min_magnitude(magnitude):
+    quakes = Earthquake.query.filter(Earthquake.magnitude >= magnitude).all()
+    quakes_list = [q.to_dict() for q in quakes]
+
+    return make_response({
+        "count": len(quakes_list),
+        "quakes": quakes_list 
+    }, 200)
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
